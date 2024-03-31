@@ -1,0 +1,43 @@
+package com.hisujung.microservice.dto;
+
+import com.hisujung.microservice.entity.Portfolio;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class PortfolioSaveRequestDto {
+
+    private String title;
+    private String urlLink;
+    private String description;
+
+    @Builder
+    public PortfolioSaveRequestDto(String title, String urlLink, String description) {
+        this.title = title;
+        this.urlLink = urlLink;
+        this.description = description;
+    }
+
+    //임시로 Member 관련 코드 삭제
+    public Portfolio toEntity() {
+        return Portfolio.builder()
+                .title(title)
+                .urlLink(urlLink)
+                .description(description)
+                .build();
+    }
+
+//    public Portfolio toEntity(Member member) {
+//        return Portfolio.builder()
+//                .member(member)
+//                .title(title)
+//                .urlLink(urlLink)
+//                .description(description)
+//                .build();
+//    }
+
+}
