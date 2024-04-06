@@ -37,7 +37,7 @@ public class GptServiceImpl implements GptService{
 
         Map<String, String> assistantMessage = new HashMap<>();
         assistantMessage.put("role", "system");
-        assistantMessage.put("content", "내가 참여한 대외활동은 다음과 같고, 내가 취업하려는 분야는" + careerField + ", 이러한 내용을 참고해서 나의 취업 자기소개서를 작성해줘.");
+        assistantMessage.put("content", "내가 참여한 대외활동은 다음과 같고, 내가 취업하려는 분야는" + careerField + ", 이러한 내용을 참고해서 나의 취업 자기소개서를 5000자 이내로 작성해줘.");
         messages.add(assistantMessage);
 
         bodyMap.put("messages", messages);
