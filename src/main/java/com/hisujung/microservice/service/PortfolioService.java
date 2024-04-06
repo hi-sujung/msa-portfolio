@@ -1,6 +1,5 @@
 package com.hisujung.microservice.service;
 
-import com.hisujung.microservice.entity.Portfolio;
 import com.hisujung.microservice.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,18 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PortfolioService {
 
+    //private final MemberRepository memberRepository;
     private final PortfolioRepository portfolioRepository;
-
-    /**
-     * 참여 활동 기반 ai가 생성한 포트폴리오 DB에 저장
-     * @param memberId
-     * @param content
-     * @return 생성한 포트폴리오 PK
-     */
-    @Transactional
-    public Long save(String memberId, String content) {
-        return portfolioRepository.save(Portfolio.builder().memberId(memberId).description(content).build()).getId();
-    }
 
     //임시로 Member 관련 기능 주석 처리
 //    @Transactional

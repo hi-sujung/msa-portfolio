@@ -16,25 +16,28 @@ public class Portfolio extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 사용자 이메일
-    private String memberId;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
+//    private Member member;
 
     @Column(nullable = false)
     private String title;
 
-    // 포트폴리오 자기소개서 내용
+    private String urlLink;
+
     private String description;
 
     @Builder
-    public Portfolio(String memberId, String title, String description) {
-
-        this.memberId = memberId;
+    public Portfolio(String title, String urlLink, String description) {
+        //this.member = member;
         this.title = title;
+        this.urlLink = urlLink;
         this.description = description;
     }
 
-    public void update(String title, String description) {
+    public void update(String title, String urlLink, String description) {
         this.title = title;
+        this.urlLink = urlLink;
         this.description = description;
     }
 }

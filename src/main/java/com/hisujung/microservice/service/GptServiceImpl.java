@@ -53,12 +53,11 @@ public class GptServiceImpl implements GptService{
     }
 
     @Override
-    public String getAssistantMsg(String activities, String careerField) throws JsonProcessingException {
+    public ResponseEntity<?> getAssistantMsg(String activities, String careerField) throws JsonProcessingException {
+        System.out.println("겟어시스턴트 안");
         JsonNode jsonNode = callChatGpt(activities, careerField);
         String content = jsonNode.path("choices").get(0).path("message").path("content").asText();
 
-        //return ResponseEntity.status(HttpStatus.OK).body(content);
-        return content;
-
+        return ResponseEntity.status(HttpStatus.OK).body(content);
     }
 }
