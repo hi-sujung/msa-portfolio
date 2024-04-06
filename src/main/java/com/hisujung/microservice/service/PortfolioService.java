@@ -1,5 +1,6 @@
 package com.hisujung.microservice.service;
 
+import com.hisujung.microservice.entity.Portfolio;
 import com.hisujung.microservice.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PortfolioService {
 
-    //private final MemberRepository memberRepository;
     private final PortfolioRepository portfolioRepository;
+
+    @Transactional
+    public Long save(String memberId, String title, String contents) {
+        return portfolioRepository.save(Portfolio.builder().memberId(memberId).title(title).description(contents).build()).getId();
+    }
 
     //임시로 Member 관련 기능 주석 처리
 //    @Transactional
