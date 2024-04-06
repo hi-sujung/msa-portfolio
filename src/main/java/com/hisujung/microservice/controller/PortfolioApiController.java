@@ -1,12 +1,13 @@
 package com.hisujung.microservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hisujung.microservice.ApiResponse;
 import com.hisujung.microservice.dto.ActivitiesDto;
 import com.hisujung.microservice.service.GptServiceImpl;
 import com.hisujung.microservice.service.PortfolioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,15 @@ public class PortfolioApiController {
     //private final UserService userService;
 
     @PostMapping("/createbyai")
-    public ResponseEntity<?> createByAi(@RequestBody ActivitiesDto dto) throws JsonProcessingException {
-        return gptService.getAssistantMsg(dto.getActivities(), dto.getCareerField());
+    public ApiResponse<Long> createByAi(@RequestBody ActivitiesDto dto, Authentication auth) throws JsonProcessingException {
+
+        Long result = portfolioService.save(auth.getName(), dto.getPortfolioTitle(), gptService.getAssistantMsg(dto.getActivities(), dto.getCareerField()));
+
+        if(result == -1L) {
+            return (ApiResponse<Long>) ApiResponse.createError("포트폴리오 생성에 실패했습니다.");
+        }
+        return ApiResponse.createSuccess(result);
+        
     }
 
 //    //회원의 포트폴리오 생성
