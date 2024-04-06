@@ -22,6 +22,7 @@ public class Portfolio extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
+    @Column(length = 7000)
     private String description;
 
     @Builder

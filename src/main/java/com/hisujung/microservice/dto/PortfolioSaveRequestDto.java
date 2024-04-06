@@ -12,13 +12,11 @@ import lombok.Setter;
 public class PortfolioSaveRequestDto {
 
     private String title;
-    private String urlLink;
     private String description;
 
     @Builder
     public PortfolioSaveRequestDto(String title, String urlLink, String description) {
         this.title = title;
-        this.urlLink = urlLink;
         this.description = description;
     }
 
@@ -26,7 +24,6 @@ public class PortfolioSaveRequestDto {
     public Portfolio toEntity() {
         return Portfolio.builder()
                 .title(title)
-                .urlLink(urlLink)
                 .description(description)
                 .build();
     }
