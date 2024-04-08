@@ -1,10 +1,16 @@
 package com.hisujung.microservice.service;
 
+import com.hisujung.microservice.dto.PortfolioListResponseDto;
+import com.hisujung.microservice.dto.PortfolioResponseDto;
+import com.hisujung.microservice.dto.PortfolioSaveRequestDto;
 import com.hisujung.microservice.entity.Portfolio;
 import com.hisujung.microservice.repository.PortfolioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -19,12 +25,12 @@ public class PortfolioService {
     }
 
     //임시로 Member 관련 기능 주석 처리
-//    @Transactional
-//    public Long save(Member member, PortfolioSaveRequestDto requestDto) {
-//
-//        return portfolioRepository.save(requestDto.toEntity(member)).getId();
-//    }
-//
+    @Transactional
+    public Long save(PortfolioSaveRequestDto requestDto) {
+
+        return portfolioRepository.save(requestDto.toEntity()).getId();
+    }
+
 //    @Transactional
 //    public Long update(Long id, PortfolioUpdateRequestDto requestDto) {
 //        Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 포트폴리오가 없습니다. id=" + id));
@@ -33,18 +39,18 @@ public class PortfolioService {
 //
 //        return id;
 //    }
-//
-//    public PortfolioResponseDto findById(Long id) {
-//        Portfolio entity = portfolioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 포트폴리오가 없습니다. id" + id));
-//
-//        return new PortfolioResponseDto(entity);
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<PortfolioListResponseDto> findAllDescByMember(Long memberId) {
-//        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다. id" + memberId));
-//        return portfolioRepository.findByMember(member).stream().map(PortfolioListResponseDto::new).collect(Collectors.toList());
-//    }
+
+    public PortfolioResponseDto findById(Long id) {
+        Portfolio entity = portfolioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 포트폴리오가 없습니다. id" + id));
+
+        return new PortfolioResponseDto(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PortfolioListResponseDto> findAllDescByMember() {
+        //Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다. id" + memberId));
+        return portfolioRepository.findAll().stream().map(PortfolioListResponseDto::new).collect(Collectors.toList());
+    }
 //
 //    @Transactional
 //    public void delete(Long id) {
