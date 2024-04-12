@@ -62,7 +62,7 @@ public class PortfolioApiController {
 
     //회원의 포트폴리오 생성
     @PostMapping("/new")
-    public ApiResponse<Long> save(@RequestBody PortfolioSaveRequestDto requestDto) {
+    public ApiResponse<Long> save (@RequestBody PortfolioSaveRequestDto requestDto) {
 
         //Member member = userService.getLoginUserByLoginId(auth.getName());
 
