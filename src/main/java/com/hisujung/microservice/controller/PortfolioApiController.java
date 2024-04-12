@@ -74,14 +74,14 @@ public class PortfolioApiController {
     }
 
     //회원의 포트폴리오 업데이트
-//    @PostMapping("update/id")
-//    public ApiResponse<Long> update(@RequestParam Long id, @RequestBody PortfolioUpdateRequestDto requestDto) {
-//        Long result = portfolioService.update(id, requestDto);
-//        if(result == -1L) {
-//            return (ApiResponse<Long>) ApiResponse.createError("포트폴리오 업데이트에 실패했습니다.");
-//        }
-//        return ApiResponse.createSuccess(result);
-//    }
+    @PostMapping("update/id")
+    public ApiResponse<Long> update(@RequestParam Long id, @RequestBody PortfolioUpdateRequestDto requestDto) {
+        Long result = portfolioService.update(id, requestDto);
+        if(result == -1L) {
+            return (ApiResponse<Long>) ApiResponse.createError("포트폴리오 업데이트에 실패했습니다.");
+        }
+        return ApiResponse.createSuccess(result);
+    }
 
     //회원의 포트폴리오 포트폴리오id(PK) 로 조회
     @GetMapping("id")
@@ -96,14 +96,9 @@ public class PortfolioApiController {
 
     //로그인한 회원의 포트폴리오 조회
     @GetMapping("/portfoliolist")
-    public ApiResponse<List<PortfolioListResponseDto>> findMemberPortfolioList(){
+    public ApiResponse<List<PortfolioListResponseDto>> findMemberPortfolioList(@RequestParam String memberId){
 
-        //Member loginUser = userService.getLoginUserByLoginId(auth.getName());
-
-//        if(loginUser == null) {
-//            return (ApiResponse<List<PortfolioListResponseDto>>)ApiResponse.createError("회원 조회에 실패하였습니다.");
-//        }
-        List<PortfolioListResponseDto> resultList = portfolioService.findAllDescByMember();
+        List<PortfolioListResponseDto> resultList = portfolioService.findAllDescByMember(memberId);
         if(resultList == null) {
             return (ApiResponse<List<PortfolioListResponseDto>>)ApiResponse.createError("포트폴리오가 존재하지 않습니다.");
         }
@@ -112,9 +107,9 @@ public class PortfolioApiController {
 
 
     //포트폴리오 삭제
-//    @DeleteMapping("/portfolio/id")
-//    public ApiResponse<Long> delete(@RequestParam Long id) {
-//        portfolioService.delete(id);
-//        return ApiResponse.createSuccess(id);
-//    }
+    @DeleteMapping("/portfolio/id")
+    public ApiResponse<Long> delete(@RequestParam Long id) {
+        portfolioService.delete(id);
+        return ApiResponse.createSuccess(id);
+    }
 }
