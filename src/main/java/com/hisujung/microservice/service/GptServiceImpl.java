@@ -18,7 +18,7 @@ public class GptServiceImpl implements GptService{
     public JsonNode callChatGpt(String activities, String careerField) throws JsonProcessingException {
         final String url = "https://api.openai.com/v1/chat/completions";
 
-        System.out.println("키: " + apiKey);
+        //System.out.println("키: " + apiKey);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
