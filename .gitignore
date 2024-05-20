@@ -36,4 +36,10 @@ out/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 
+=======
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/main/resources/
+>>>>>>> 2c6115f78eb4d97dc9cafccaa168b76457359497
