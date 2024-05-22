@@ -11,10 +11,10 @@ spec:
     metadata:
       labels:
         app: hisujung-portfolio
-      spec:
-        containers: # 파드 컨테이너의 사양
-        - name: hisujung-portfolio
-        - image:
+    spec:
+      containers: # 파드 컨테이너의 사양
+      - name: hisujung-portfolio
+      - image: julia2039/hisujung-portfolio:latest
 ---
 
 apiVersion: v1
