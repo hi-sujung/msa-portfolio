@@ -27,9 +27,9 @@ public class PortfolioService {
 
     //임시로 Member 관련 기능 주석 처리
     @Transactional
-    public Long save(PortfolioSaveRequestDto requestDto) {
+    public Long save(String memberId, PortfolioSaveRequestDto requestDto) {
 
-        return portfolioRepository.save(requestDto.toEntity()).getId();
+        return portfolioRepository.save(requestDto.toEntity(memberId)).getId();
     }
 
     @Transactional
