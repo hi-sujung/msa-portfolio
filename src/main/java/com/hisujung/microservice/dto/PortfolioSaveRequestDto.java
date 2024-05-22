@@ -21,10 +21,11 @@ public class PortfolioSaveRequestDto {
     }
 
     //임시로 Member 관련 코드 삭제
-    public Portfolio toEntity() {
+    public Portfolio toEntity(String memberId) {
         return Portfolio.builder()
                 .title(title)
                 .description(description)
+                .memberId(memberId)
                 .build();
     }
 

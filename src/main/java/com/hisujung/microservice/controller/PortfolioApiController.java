@@ -74,11 +74,11 @@ public class PortfolioApiController {
 
     //회원의 포트폴리오 생성
     @PostMapping("/new")
-    public ApiResponse<Long> save(@RequestBody PortfolioSaveRequestDto requestDto) {
+    public ApiResponse<Long> save(@RequestParam String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
 
         //Member member = userService.getLoginUserByLoginId(auth.getName());
 
-        Long result = portfolioService.save(requestDto);
+        Long result = portfolioService.save(memberId, requestDto);
         if(result == -1L) {
             return (ApiResponse<Long>) ApiResponse.createError("포트폴리오 업데이트에 실패했습니다.");
         }
