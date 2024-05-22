@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hisujung-portfolio
+spec:
+  replicas: 1
+  selector: # 디플로이먼트 제어하의 레플리카셋과 파드를 대응시키기 위해 라벨 사용
+    matchLabels:
+      app: hisujung-portfolio
+  template: # 파드 템플릿
+    metadata:
+      labels:
+        app: hisujung-portfolio
+      spec:
+        containers: # 파드 컨테이너의 사양
+        - name: hisujung-portfolio
+        - image:
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hisujung-portfolio
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3001
+      targetPort: 8080
+  selector:
+    app: hisujung-portfolio
