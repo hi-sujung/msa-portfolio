@@ -15,7 +15,7 @@ public class PortfolioSaveRequestDto {
     private String description;
 
     @Builder
-    public PortfolioSaveRequestDto(String title, String urlLink, String description) {
+    public PortfolioSaveRequestDto(String title, String description) {
         this.title = title;
         this.description = description;
     }
