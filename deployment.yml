@@ -17,6 +17,22 @@ spec:
         image: julia2039/hisujung-portfolio:latest
         ports:
           - containerPort: 8080
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: url
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: password
 ---
 
 apiVersion: v1
