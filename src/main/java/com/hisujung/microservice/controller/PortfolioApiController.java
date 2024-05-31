@@ -100,8 +100,8 @@ public class PortfolioApiController {
     }
 
     //로그인한 회원의 포트폴리오 조회
-    @GetMapping("/portfoliolist")
-    public ApiResponse<List<PortfolioListResponseDto>> findMemberPortfolioList(@RequestParam String memberId){
+    @GetMapping(path = "/portfoliolist", headers = "X-Authoization-Id")
+    public ApiResponse<List<PortfolioListResponseDto>> findMemberPortfolioList(@RequestHeader("X-Authoization-Id") String memberId){
 
         List<PortfolioListResponseDto> resultList = portfolioService.findAllDescByMember(memberId);
         if(resultList == null) {
