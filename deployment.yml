@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hisujung-portfolio
+  name: msa-portfolio
 spec:
   replicas: 2
   selector: # 디플로이먼트 제어하의 레플리카셋과 파드를 대응시키기 위해 라벨 사용
     matchLabels:
-      app: hisujung-portfolio
+      app: msa-portfolio
   template: # 파드 템플릿
     metadata:
       labels:
-        app: hisujung-portfolio
+        app: msa-portfolio
     spec:
       containers: # 파드 컨테이너의 사양
-      - name: hisujung-portfolio
-        image: julia2039/hisujung-portfolio:latest
+      - name: msa-portfolio
+        image: julia2039/msa-portfolio:latest
         ports:
-          - containerPort: 8080
+          - containerPort: 8082
         env:
           - name: DATABASE_URL
             valueFrom:
@@ -38,14 +38,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hisujung-portfolio
+  name: msa-portfolio
 spec:
   type: LoadBalancer
   ports:
     - port: 3001
-      targetPort: 8080
+      targetPort: 8082
   selector:
-    app: hisujung-portfolio
+    app: msa-portfolio
 
 
 
