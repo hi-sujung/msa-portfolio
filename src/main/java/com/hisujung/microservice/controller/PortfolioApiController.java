@@ -66,8 +66,8 @@ public class PortfolioApiController {
 
 
     //회원의 포트폴리오 생성
-    @PostMapping("/new")
-    public ApiResponse<Long> save(@RequestParam String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
+    @PostMapping(path="/new",  headers = "X-Authoization-Id")
+    public ApiResponse<Long> save(@RequestHeader("X-Authoization-Id") String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
 
         //Member member = userService.getLoginUserByLoginId(auth.getName());
 
