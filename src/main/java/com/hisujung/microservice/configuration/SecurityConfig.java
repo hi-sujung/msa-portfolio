@@ -2,6 +2,7 @@ package com.hisujung.microservice.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -13,10 +14,28 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+    private static final String[] AUTH_WHITELIST = {
+            "/portfolio/**"
+    };
+
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
+        //http.formLogin((form) -> form.disable());
+        //http.httpBasic(AbstractHttpConfigurer::disable);
+
+
+
+
+        // 권한 규칙 작성
+//        http.authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers(AUTH_WHITELIST).permitAll()
+//                        //@PreAuthrization을 사용할 것이기 때문에 모든 경로에 대한 인증처리는 Pass
+//                        .anyRequest().permitAll()
+                //.anyRequest().authenticated()
+        //);
         return http.build();
     }
 
