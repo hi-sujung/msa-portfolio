@@ -26,7 +26,6 @@ import java.util.List;
 public class PortfolioApiController {
 
     private final PortfolioService portfolioService;
-    private final GptServiceImpl gptService;
 
 
     public String fetchNoticeCheckedList() {
@@ -35,12 +34,12 @@ public class PortfolioApiController {
         return response.getBody();
     }
 
-    @PostMapping(path="/auth/create-by-ai", headers = "X-Authoization-Id")
-    public ApiResponse<PortfolioSaveRequestDto> createByAi(@RequestHeader("X-Authoization-Id") String memberId, @RequestParam String careerField, @RequestParam String title) throws JsonProcessingException {
-            PortfolioSaveRequestDto result = new PortfolioSaveRequestDto(title, gptService.getAssistantMsg(title, careerField));
-            Long resultId = portfolioService.save(memberId, result);
-            return ApiResponse.createSuccess(result);
-    }
+//    @PostMapping(path="/auth/create-by-ai", headers = "X-Authoization-Id")
+//    public ApiResponse<PortfolioSaveRequestDto> createByAi(@RequestHeader("X-Authoization-Id") String memberId, @RequestParam String careerField, @RequestParam String title) throws JsonProcessingException {
+//            PortfolioSaveRequestDto result = new PortfolioSaveRequestDto(title, gptService.getAssistantMsg(title, careerField));
+//            Long resultId = portfolioService.save(memberId, result);
+//            return ApiResponse.createSuccess(result);
+//    }
 
 
 
