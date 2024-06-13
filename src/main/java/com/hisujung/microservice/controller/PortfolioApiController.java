@@ -1,11 +1,18 @@
 package com.hisujung.microservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hisujung.microservice.ApiResponse;
 import com.hisujung.microservice.dto.*;
+import com.hisujung.microservice.service.GptServiceImpl;
 import com.hisujung.microservice.service.PortfolioService;
 import com.hisujung.microservice.service.RateLimiterService;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.ConsumptionProbe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +26,7 @@ import java.util.List;
 public class PortfolioApiController {
 
     private final PortfolioService portfolioService;
+    private final GptServiceImpl gptService;
 
 
     public String fetchNoticeCheckedList() {
@@ -27,10 +35,17 @@ public class PortfolioApiController {
         return response.getBody();
     }
 
+    @PostMapping(path="/auth/create-by-ai", headers = "X-Authoization-Id")
+    public ApiResponse<PortfolioSaveRequestDto> createByAi(@RequestHeader("X-Authoization-Id") String memberId, @RequestParam String careerField, @RequestParam String title) throws JsonProcessingException {
+            PortfolioSaveRequestDto result = new PortfolioSaveRequestDto(title, gptService.getAssistantMsg(title, careerField));
+            Long resultId = portfolioService.save(memberId, result);
+            return ApiResponse.createSuccess(result);
+    }
+
 
 
     //회원의 포트폴리오 생성
-    @PostMapping(path="/new",  headers = "X-Authoization-Id")
+    @PostMapping(path="/auth/new",  headers = "X-Authoization-Id")
     public ApiResponse<Long> save(@RequestHeader("X-Authoization-Id") String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
 
         //Member member = userService.getLoginUserByLoginId(auth.getName());
@@ -43,7 +58,7 @@ public class PortfolioApiController {
     }
 
     //회원의 포트폴리오 업데이트
-    @PostMapping("update/id")
+    @PostMapping("/update/id")
     public ApiResponse<Long> update(@RequestParam Long id, @RequestBody PortfolioUpdateRequestDto requestDto) {
         Long result = portfolioService.update(id, requestDto);
         if(result == -1L) {
@@ -53,7 +68,7 @@ public class PortfolioApiController {
     }
 
     //회원의 포트폴리오 포트폴리오id(PK) 로 조회
-    @GetMapping("id")
+    @GetMapping("/id")
     public ApiResponse<PortfolioResponseDto> findById(@RequestParam Long id) {
         PortfolioResponseDto result = portfolioService.findById(id);
         if(result == null) {
@@ -64,7 +79,7 @@ public class PortfolioApiController {
     }
 
     //로그인한 회원의 포트폴리오 조회
-    @GetMapping(path = "/portfoliolist", headers = "X-Authoization-Id")
+    @GetMapping(path = "/auth/portfoliolist", headers = "X-Authoization-Id")
     public ApiResponse<List<PortfolioListResponseDto>> findMemberPortfolioList(@RequestHeader("X-Authoization-Id") String memberId){
 
         List<PortfolioListResponseDto> resultList = portfolioService.findAllDescByMember(memberId);
