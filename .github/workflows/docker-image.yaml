@@ -27,4 +27,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: julia2039/msa-portfolio:v2
+          tags: julia2039/msa-portfolio:v3
