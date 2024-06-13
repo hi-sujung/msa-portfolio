@@ -1,18 +1,10 @@
 package com.hisujung.microservice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hisujung.microservice.ApiResponse;
 import com.hisujung.microservice.dto.*;
-import com.hisujung.microservice.service.GptServiceImpl;
 import com.hisujung.microservice.service.PortfolioService;
-import com.hisujung.microservice.service.RateLimiterService;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.ConsumptionProbe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
