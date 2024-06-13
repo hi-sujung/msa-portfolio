@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         //@PreAuthrization을 사용할 것이기 때문에 모든 경로에 대한 인증처리는 Pass
                         .anyRequest().permitAll()
-//                        .anyRequest().authenticated()
+                        //.anyRequest().authenticated()
         );
 
         return http.build();
