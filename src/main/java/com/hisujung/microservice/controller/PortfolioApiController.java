@@ -1,8 +1,13 @@
 package com.hisujung.microservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hisujung.microservice.ApiResponse;
 import com.hisujung.microservice.dto.*;
+import com.hisujung.microservice.service.GptServiceImpl;
 import com.hisujung.microservice.service.PortfolioService;
+import com.hisujung.microservice.service.RateLimiterService;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.ConsumptionProbe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,8 @@ import java.util.List;
 public class PortfolioApiController {
 
     private final PortfolioService portfolioService;
+    private final GptServiceImpl gptService;
+    private final RateLimiterService rateLimiterService;
 
 
     public String fetchNoticeCheckedList() {
@@ -26,31 +33,49 @@ public class PortfolioApiController {
         return response.getBody();
     }
 
-//    @PostMapping(path="/auth/create-by-ai", headers = "X-Authoization-Id")
-//    public ApiResponse<PortfolioSaveRequestDto> createByAi(@RequestHeader("X-Authoization-Id") String memberId, @RequestParam String careerField, @RequestParam String title) throws JsonProcessingException {
-//            PortfolioSaveRequestDto result = new PortfolioSaveRequestDto(title, gptService.getAssistantMsg(title, careerField));
-//            Long resultId = portfolioService.save(memberId, result);
-//            return ApiResponse.createSuccess(result);
-//    }
-
-
-    //회원의 포트폴리오 생성
-    @PostMapping(path="/new")
-    public ApiResponse<Long> saveChatGptPortfolio(@RequestParam String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
-
-        //Member member = userService.getLoginUserByLoginId(auth.getName());
-
-        Long result = portfolioService.save(memberId, requestDto);
-        if(result == -1L) {
-            return (ApiResponse<Long>) ApiResponse.createError("포트폴리오 업데이트에 실패했습니다.");
-        }
-        return ApiResponse.createSuccess(result);
+    //chapGPT 활용 포트폴리오 자동생성
+    @PostMapping(path="/auth/create-by-ai", headers = "X-Authorization-Id")
+    public ApiResponse<PortfolioSaveRequestDto> createByAi(@RequestHeader("X-Authorization-Id") String memberId, @RequestParam String careerField, @RequestParam String title, @RequestBody ParticipatedNoticeDto participatedNoticeDto) throws JsonProcessingException {
+            PortfolioSaveRequestDto result = new PortfolioSaveRequestDto(title, gptService.getAssistantMsg(title, careerField, participatedNoticeDto));
+            Long resultId = portfolioService.save(memberId, result);
+            return ApiResponse.createSuccess(result);
     }
 
 
     //회원의 포트폴리오 생성
-    @PostMapping(path="/auth/new",  headers = "X-Authoization-Id")
-    public ApiResponse<Long> save(@RequestHeader("X-Authoization-Id") String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
+    @PostMapping(path="/new")
+    public ApiResponse<Long> savePortfolio(@RequestParam String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
+
+        Bucket bucket = rateLimiterService.resolveBucket(memberId);
+        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
+
+        long saveToken = probe.getRemainingTokens();
+
+        if(probe.isConsumed()) {
+            log.info("API Call Success");
+            log.info("Available Token : {}", saveToken);
+
+            Long result = portfolioService.save(memberId, requestDto);
+            if(result == -1L) {
+                return (ApiResponse<Long>) ApiResponse.createError("포트폴리오 업데이트에 실패했습니다.");
+            }
+            return ApiResponse.createSuccess(result);
+        }
+
+        long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
+
+        log.info("TOO MANY REQUEST");
+        log.info("Available Token : {}", saveToken);
+        log.info("Wait Time {} Second ", waitForRefill);
+
+        return (ApiResponse<Long>) ApiResponse.createError("HttpStatus.TOO_MANY_REQUESTS");
+
+    }
+
+
+    //회원의 포트폴리오 생성
+    @PostMapping(path="/auth/new",  headers = "X-Authorization-Id")
+    public ApiResponse<Long> save(@RequestHeader("X-Authorization-Id") String memberId, @RequestBody PortfolioSaveRequestDto requestDto) {
 
         //Member member = userService.getLoginUserByLoginId(auth.getName());
 
@@ -83,8 +108,8 @@ public class PortfolioApiController {
     }
 
     //로그인한 회원의 포트폴리오 조회
-    @GetMapping(path = "/auth/portfoliolist", headers = "X-Authoization-Id")
-    public ApiResponse<List<PortfolioListResponseDto>> findMemberPortfolioList(@RequestHeader("X-Authoization-Id") String memberId){
+    @GetMapping(path = "/auth/portfoliolist", headers = "X-Authorization-Id")
+    public ApiResponse<List<PortfolioListResponseDto>> findMemberPortfolioList(@RequestHeader("X-Authorization-Id") String memberId){
 
         List<PortfolioListResponseDto> resultList = portfolioService.findAllDescByMember(memberId);
         if(resultList == null) {
